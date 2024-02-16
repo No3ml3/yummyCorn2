@@ -33,7 +33,7 @@ services:
       - ./common.env
       - ./web.env
     volumes:
-      - web-client-build:/app
+      - admin-client-build:/app
     networks:
       - frontend
 
