@@ -83,6 +83,7 @@ services:
 
 volumes:
   web-client-build:
+  admin-client-build:
 
 networks:
   frontend:
