@@ -31,6 +31,7 @@
     "dev:frontend:mobile": "cd ./packages/frontend/mobile && bun run start",
     "build:backend:api": "cd ./packages/backend/api && bun run build",
     "build:frontend:web": "cd ./packages/frontend/web && bun run build",
+    "build:frontend:admin": "cd ./packages/frontend/admin && bun run build",
     "delete": "bun concurrently \"bun run delete:*\"",
     "delete:dist": "find . -type d -name dist -prune -exec rm -rf {} +",
     "delete:expo": "find . -type d -name .expo -prune -exec rm -rf {} +",
