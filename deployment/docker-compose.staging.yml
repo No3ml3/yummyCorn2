@@ -27,16 +27,6 @@ services:
     networks:
       - frontend
 
-  admin:
-    image: no3ml3/yummycorn-admin-staging:latest
-    env_file:
-      - ./common.env
-      - ./web.env
-    volumes:
-      - admin-client-build:/app
-    networks:
-      - frontend
-
   nginx:
     image: nginx:1.21.3
     depends_on:
@@ -83,7 +73,6 @@ services:
 
 volumes:
   web-client-build:
-  admin-client-build:
 
 networks:
   frontend:

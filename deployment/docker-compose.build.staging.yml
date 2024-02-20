@@ -18,9 +18,3 @@ services:
       dockerfile: ./deployment/DockerfileBackendMigrations
       context: ../
     image: no3ml3/yummycorn-migrations-staging
-
-  admin:
-    build:
-      dockerfile: ./deployment/DockerfileAdmin
-      context: ../
-    image: no3ml3/yummycorn-admin-staging
