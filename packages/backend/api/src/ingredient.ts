@@ -6,9 +6,20 @@ import { db } from '@app/backend-shared';
 const ingredient = express.Router();
 
 ingredient.get('/random', async (req, res) => {
+  const mixedArray = Object.values(req.query).map((value) => value);
+  const chosenIngredients: string[] = mixedArray.filter(
+    (item): item is string => typeof item === 'string',
+  );
   const ingredient = await db
     .selectFrom('ingredient')
-    .select(['ingredient.id', 'ingredient.name', 'ingredient.flavour'])
+    .select([
+      'ingredient.id',
+      'ingredient.name',
+      'ingredient.flavour',
+      'ingredient.degree',
+      'ingredient.kcal',
+    ])
+    .where('ingredient.name', 'not in', chosenIngredients ?? [])
     .orderBy(sql`RAND()`)
     .limit(1)
     .executeTakeFirst();
@@ -16,13 +27,25 @@ ingredient.get('/random', async (req, res) => {
   return res.json(ingredient);
 });
 
-ingredient.get('/:ingredientId', async (req, res) => {
+ingredient.get(`/:ingredientId`, async (req, res) => {
   const ingredientId = req.params.ingredientId;
+
+  const mixedArray = Object.values(req.query).map((value) => value);
+  const chosenIngredients: string[] = mixedArray.filter(
+    (item): item is string => typeof item === 'string',
+  );
 
   // It get the 6 most popular ingredients base on one ingredient
   const ingredientsByIngredient = await db
     .selectFrom('ingredient')
-    .select(['ingredient.id', 'ingredient.name', 'ingredient.flavour'])
+    .select([
+      'ingredient.id',
+      'ingredient.name',
+      'ingredient.flavour',
+      'ingredient.flavour',
+      'ingredient.degree',
+      'ingredient.kcal',
+    ])
     .innerJoin(
       'action_ingredient',
       'ingredient.id',
@@ -49,6 +72,7 @@ ingredient.get('/:ingredientId', async (req, res) => {
         ),
     )
     .where('ingredient.id', '!=', Number.parseInt(ingredientId))
+    .where('ingredient.name', 'not in', chosenIngredients ?? [])
     .groupBy('ingredient.id')
     .orderBy(sql`COUNT(ingredient.id)`, 'desc')
     .limit(6)
@@ -57,8 +81,16 @@ ingredient.get('/:ingredientId', async (req, res) => {
   // It complete my function with random ingredients, in cas there is not enough
   const ingredient = await db
     .selectFrom('ingredient')
-    .select(['ingredient.id', 'ingredient.name', 'ingredient.flavour'])
+    .select([
+      'ingredient.id',
+      'ingredient.name',
+      'ingredient.flavour',
+      'ingredient.flavour',
+      'ingredient.degree',
+      'ingredient.kcal',
+    ])
     .where('ingredient.id', '!=', Number.parseInt(ingredientId))
+    .where('ingredient.name', 'not in', chosenIngredients ?? [])
     .orderBy(sql`rand()`)
     .limit(6 - ingredientsByIngredient.length)
     .execute();
